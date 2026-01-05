@@ -16,8 +16,8 @@ public class ClienteApiClient : IClienteApiClient
         _settings = settings;
     }
 
-    public async Task<IEnumerable<ClienteDto>> ListarClientesAsync() =>
-        await _http.GetFromJsonAsync<IEnumerable<ClienteDto>>(
+    public async Task<IEnumerable<ClienteListarDto>> ListarClientesAsync() =>
+        await _http.GetFromJsonAsync<IEnumerable<ClienteListarDto>>(
             $"/webhook/cadastro_cliente?api_key={_settings.ApiKey}") ?? [];
 
     public async Task CriarAsync(ClienteDto dto) =>
@@ -26,7 +26,7 @@ public class ClienteApiClient : IClienteApiClient
 
     public async Task AtualizarAsync(string cpfCnpj, ClienteDto dto) =>
         await _http.PutAsJsonAsync(
-            $"/webhook/cadastro_cliente?cpf_cnpj={cpfCnpj}&api_key={_settings.ApiKey}", dto);
+            $"/webhook/cadastro_cliente?api_key={_settings.ApiKey}&cpf_cnpj={cpfCnpj}", dto);
 
     public async Task ExcluirAsync(string cpfCnpj) =>
         await _http.DeleteAsync($"/webhook/cadastro_cliente?cpf_cnpj={cpfCnpj}&api_key={_settings.ApiKey}");

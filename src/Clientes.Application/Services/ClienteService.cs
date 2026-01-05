@@ -10,7 +10,7 @@ public class ClienteService : IClienteService
 
     public ClienteService(IClienteApiClient api) => _api = api;
 
-    public Task<IEnumerable<ClienteDto>> ListarClientesAsync()
+    public Task<IEnumerable<ClienteListarDto>> ListarClientesAsync()
         => _api.ListarClientesAsync();
 
     public Task CriarAsync(ClienteDto dto)

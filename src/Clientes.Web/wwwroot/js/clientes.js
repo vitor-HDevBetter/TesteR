@@ -1,89 +1,90 @@
 ﻿let modal;
+let preenchendoCategoria = false;
+let isEdit;
 
 function abrirModal() {
+    limparModalCliente();
+    isEdit = false; 
+
     const el = $('#modalCliente')[0];
     modal = new bootstrap.Modal(el);
     modal.show();
 
+    carregarRegioes();
     configurarAutocompleteCategoria();
 }
 
+function abrirModalEditar(cliente) {
+    limparModalCliente();
+
+    isEdit = true;
+
+    const el = $('#modalCliente')[0];
+    modal = bootstrap.Modal.getOrCreateInstance(el);
+
+    configurarAutocompleteCategoria();
+
+    if (!cliente) {
+        limparModalCliente();
+        carregarRegioes();
+        modal.show();
+        return;
+    }
+
+    $('#nome').val(cliente.nome ?? '');
+    $('#cpfCnpj').val(cliente.cpfCnpj ?? '');
+
+    $('#fantasia').val(cliente.fantasia ?? '');
+    $('#ieRg').val(cliente.ieRg ?? '');
+    $('#ativo').prop('checked', !!cliente.ativo);
+
+    preenchendoCategoria = true;
+    $('#categoriaInput').val(cliente.categoriaDescricao ?? '');
+    $('#categoriaCodigo').val(cliente.categoriaCodigo ?? '');
+    $('#categoriaSugestoes').addClass('d-none').empty();
+    preenchendoCategoria = false;
+
+    carregarRegioes(cliente.regiaoCodigo);
+
+    modal.show();
+}
+
 function carregar() {
-    const $tbody = $('#gridClientes');
-
-    $tbody.html(`
-        <tr>
-            <td colspan="7" class="text-center py-5">
-                <div class="spinner-border text-primary" role="status"></div>
-                <div class="mt-2 text-secondary">
-                    Carregando clientes...
-                </div>
-            </td>
-        </tr>
-    `);
-
     $.getJSON('/Clientes/ListarClientes')
         .done(function (dados) {
+            const $tbody = $('#gridClientes');
             $tbody.empty();
 
-            const possuiDadosValidos = dados?.some(c =>
-                (c.nome && c.nome.trim() !== '') ||
-                (c.cpfCnpj && c.cpfCnpj.trim() !== '')
-            );
-
-            if (!possuiDadosValidos) {
-                $tbody.html(`
-                    <tr>
-                        <td colspan="7" class="text-center py-5 text-secondary">
-                            <i class="bi bi-inbox fs-3 d-block mb-2"></i>
-                            Nenhum cliente cadastrado
-                        </td>
-                    </tr>
-                `);
-                return;
-            }
-
             $.each(dados, function (_, c) {
-
-                if (
-                    (!c.nome || c.nome.trim() === '') &&
-                    (!c.cpfCnpj || c.cpfCnpj.trim() === '')
-                ) return;
-
-                $tbody.append(`
+                const $tr = $(`
                     <tr>
                         <td>${c.nome || '-'}</td>
-                        <td>${c.fantasia || '-'}</td>
                         <td>${c.cpfCnpj || '-'}</td>
+                        <td>${c.fantasia || '-'}</td>
                         <td>${c.categoriaDescricao || '-'}</td>
                         <td>${c.regiaoDescricao || '-'}</td>
                         <td>${c.ativoDescricao || '-'}</td>
+                        <td>${c.ieRg || '-'}</td>
                         <td class="text-center">
-                            <button class="btn btn-sm btn-warning me-1"
-                                    data-cpfcnpj="${c.cpfCnpj}">
-                                <i class="bi bi-pencil-square me-1"></i>
-                                Editar
+                            <button class="btn btn-sm btn-warning me-1 btn-editar" type="button" data-regiaocodigo="${c.regiaoCodigo}" >
+                                <i class="bi bi-pencil-square me-1"></i>Editar
                             </button>
 
-                            <button class="btn btn-sm btn-danger btn-excluir"
+                            <button class="btn btn-sm btn-danger btn-excluir" type="button"
                                     data-cpfcnpj="${c.cpfCnpj}">
-                                <i class="bi bi-trash me-1"></i>
-                                Excluir
+                                <i class="bi bi-trash me-1"></i>Excluir
                             </button>
                         </td>
                     </tr>
                 `);
+
+                $tr.find('.btn-editar').data('cliente', c);
+
+                $tbody.append($tr);
             });
         })
-        .fail(function () {
-            $tbody.html(`
-                <tr>
-                    <td colspan="7" class="text-center py-5 text-danger">
-                        <i class="bi bi-exclamation-triangle fs-3 d-block mb-2"></i>
-                        Erro ao carregar clientes
-                    </td>
-                </tr>
-            `);
+        .fail(function (xhr) {
+            console.error('Erro ao carregar clientes', xhr);
         });
 }
 
@@ -107,7 +108,7 @@ function configurarAutocompleteCategoria() {
             return;
         }
 
-        $.getJSON('/Clientes/Categorias', { termo: termo })
+        $.getJSON('/Clientes/ListarCategoriasClientes', { termo: termo })
             .done(function (categorias) {
                 $categoriaLista.empty();
 
@@ -154,6 +155,48 @@ function configurarAutocompleteCategoria() {
     });
 }
 
+function carregarRegioes(regiaoSelecionada) {
+    const $select = $('#regiao');
+
+    $select
+        .empty()
+        .append('<option value="">Carregando...</option>')
+        .prop('disabled', true);
+
+    $.getJSON('/Clientes/ListarRegioes')
+        .done(function (regioes) {
+            $select.empty();
+
+            $select.append('<option value="">Selecione a Região...</option>');
+
+            if (!regioes || regioes.length === 0) {
+                $select.append('<option value="">Nenhuma região encontrada</option>');
+                return;
+            }
+
+            $.each(regioes, function (_, r) {
+                $select.append(`
+                    <option value="${r.codigo}">
+                        ${r.descricao}
+                    </option>
+                `);
+            });
+
+            if (regiaoSelecionada) {
+                $select.val(String(regiaoSelecionada));
+            }
+        })
+        .fail(function (xhr) {
+            console.error('Erro ao buscar regiões', xhr);
+            $select
+                .empty()
+                .append('<option value="">Erro ao carregar regiões</option>');
+        })
+        .always(function () {
+            $select.prop('disabled', false);
+        });
+}
+
 function salvar() {
     const $categoriaCodigo = $('#categoriaCodigo');
 
@@ -173,8 +216,10 @@ function salvar() {
     };
 
     $.ajax({
-        url: '/Clientes/Criar',
-        method: 'POST',
+        url: isEdit
+            ? `/Clientes/Atualizar?cpfCnpj=${encodeURIComponent(cliente.cpfCnpj)}`
+            : '/Clientes/Criar',
+        method: isEdit ? 'PUT' : 'POST',
         contentType: 'application/json; charset=utf-8',
         data: JSON.stringify(cliente)
     })
@@ -184,7 +229,6 @@ function salvar() {
         })
         .fail(function (xhr) {
             console.error('Erro ao salvar cliente', xhr);
-            alert('Erro ao salvar. Veja o console.');
         });
 }
 
@@ -201,11 +245,25 @@ function excluir(cpfCnpj) {
         })
         .fail(function (xhr) {
             console.error('Erro ao excluir cliente', xhr);
-            alert('Erro ao excluir. Veja o console.');
         });
 }
 
 $(document).on('click', '.btn-excluir', function () {
     excluir($(this).data('cpfcnpj'));
 });
+
+$(document).on('click', '.btn-editar', function () {
+    const cliente = $(this).data('cliente');
+    abrirModalEditar(cliente);
+});
+
+function limparModalCliente() {
+    $('#nome, #cpfCnpj, #fantasia, #ieRg, #categoriaInput, #categoriaCodigo').val('');
+    $('#categoriaSugestoes').addClass('d-none').empty();
+    $('#regiao').prop('selectedIndex', 0);
+    $('#ativo').prop('checked', false);
+    $('#cpfCnpj').prop('disabled', false);
+}
+
+
 

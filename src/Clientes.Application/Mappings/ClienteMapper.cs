@@ -4,7 +4,7 @@ namespace Clientes.Application.Mappings;
 
 public static class ClienteMapper
 {
-    public static ClienteDto CriarDto(
+    public static ClienteListarDto CriarDto(
         string nome,
         string fantasia,
         string cpfCnpj,
@@ -13,7 +13,7 @@ public static class ClienteMapper
         int regiaoCodigo,
         bool ativo)
     {
-        return new ClienteDto
+        return new ClienteListarDto
         {
             Nome = nome,
             Fantasia = fantasia,

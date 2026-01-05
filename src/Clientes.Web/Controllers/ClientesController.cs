@@ -40,13 +40,13 @@ public class ClientesController : Controller
 
         var dto = new ClienteDto
         {
-            Nome = model.Nome,
-            Fantasia = model.Fantasia,
-            CpfCnpj = model.CpfCnpj,
-            IeRg = model.IeRg,
-            CategoriaCodigo = model.CategoriaCodigo,
-            RegiaoCodigo = model.RegiaoCodigo,
-            Ativo = model.Ativo
+            nome = model.Nome,
+            fantasia = model.Fantasia,
+            cnpj_cpf = model.CpfCnpj,
+            ie_rg = model.IeRg,
+            categoria_codigo = model.CategoriaCodigo,
+            regiao_codigo = model.RegiaoCodigo,
+            ativo = model.Ativo
         };
 
         await _service.CriarAsync(dto);
@@ -59,13 +59,13 @@ public class ClientesController : Controller
 
         var dto = new ClienteDto
         {
-            Nome = model.Nome,
-            Fantasia = model.Fantasia,
-            CpfCnpj = model.CpfCnpj,
-            IeRg = model.IeRg,
-            CategoriaCodigo = model.CategoriaCodigo,
-            RegiaoCodigo = model.RegiaoCodigo,
-            Ativo = model.Ativo
+            nome = model.Nome,
+            fantasia = model.Fantasia,
+            cnpj_cpf = model.CpfCnpj,
+            ie_rg = model.IeRg,
+            categoria_codigo = model.CategoriaCodigo,
+            regiao_codigo = model.RegiaoCodigo,
+            ativo = model.Ativo
         };
 
         await _service.AtualizarAsync(cpfCnpj, dto);

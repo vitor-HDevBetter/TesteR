@@ -4,7 +4,7 @@ namespace Clientes.Application.Interfaces.Services;
 
 public interface IClienteService
 {
-    Task<IEnumerable<ClienteDto>> ListarClientesAsync();
+    Task<IEnumerable<ClienteListarDto>> ListarClientesAsync();
 
     Task CriarAsync(ClienteDto cliente);
 

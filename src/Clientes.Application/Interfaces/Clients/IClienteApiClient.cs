@@ -4,7 +4,7 @@ namespace Clientes.Application.Interfaces.Clients;
 
 public interface IClienteApiClient
 {
-    Task<IEnumerable<ClienteDto>> ListarClientesAsync();
+    Task<IEnumerable<ClienteListarDto>> ListarClientesAsync();
 
     Task CriarAsync(ClienteDto dto);
 

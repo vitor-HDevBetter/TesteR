@@ -2,14 +2,11 @@
 
 public class ClienteDto
 {
-    public string Nome { get; set; } = string.Empty;
-    public string Fantasia { get; set; } = string.Empty;
-    public string CpfCnpj { get; set; } = string.Empty;
-    public string IeRg { get; set; } = string.Empty;
-    public int CategoriaCodigo { get; set; }
-    public string CategoriaDescricao { get; set; } = string.Empty;
-    public string RegiaoDescricao { get; set; } = string.Empty;
-    public int RegiaoCodigo { get; set; }
-    public bool Ativo { get; set; }
-    public string AtivoDescricao { get; set; } = string.Empty;
+    public string nome { get; set; } = string.Empty;
+    public string fantasia { get; set; } = string.Empty;
+    public string cnpj_cpf { get; set; } = string.Empty;
+    public string ie_rg { get; set; } = string.Empty;
+    public int categoria_codigo { get; set; }
+    public int regiao_codigo { get; set; }
+    public bool ativo { get; set; }
 }
