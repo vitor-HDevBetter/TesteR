@@ -1,0 +1,13 @@
+#categoriaSugestoes {
+    position: absolute;
+    top: 100%;
+    left: 0;
+    width: 100%;
+    z-index: 9999; 
+    max-height: 200px;
+    overflow-y: auto;
+    background-color: #fff;
+    border: 1px solid #dee2e6;
+    border-top: none;
+    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.175);
+}

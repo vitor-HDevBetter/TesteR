@@ -1,0 +1,55 @@
+﻿@{
+    ViewData["Title"] = "Clientes";
+}
+
+<div class="card-header bg-white border-bottom px-4 py-3 d-flex align-items-center justify-content-between">
+
+    <h4 class="mb-0 fw-semibold text-primary d-flex align-items-center">
+        <i class="bi bi-people me-2"></i>
+        Clientes
+    </h4>
+
+    <button class="btn btn-primary btn-sm" onclick="abrirModal()">
+        <i class="bi bi-plus-lg me-1"></i>
+
+        Adicionar
+    </button>
+
+</div>
+
+<div class="card-body pt-4 pb-0 bg-light">
+
+    <div class="table-responsive">
+
+        <table class="table table-hover table-striped align-middle mb-0 w-100 text-center">
+
+            <thead class="table-primary">
+                <tr>
+                    <th class="fw-semibold text-primary-emphasis">Nome</th>
+                    <th class="fw-semibold text-primary-emphasis">CPF / CNPJ</th>
+                    <th class="fw-semibold text-primary-emphasis">Fantasia</th>
+                    <th class="fw-semibold text-primary-emphasis">Categoria</th>
+                    <th class="fw-semibold text-primary-emphasis">Região</th>
+                    <th class="fw-semibold text-primary-emphasis">Status</th>
+                    <th class="fw-semibold text-primary-emphasis">Ações</th>
+                </tr>
+            </thead>
+
+            <tbody id="gridClientes" class="table-group-divider">
+            </tbody>
+
+        </table>
+
+    </div>
+
+</div>
+
+<partial name="_ModalCliente" />
+
+@section Scripts {
+    <script src="~/js/clientes.js"></script>
+
+    <script>
+        carregar();
+    </script>
+}
