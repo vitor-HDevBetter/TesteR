@@ -33,6 +33,7 @@ function abrirModalEditar(cliente) {
 
     $('#nome').val(cliente.nome ?? '');
     $('#cpfCnpj').val(cliente.cpfCnpj ?? '');
+    $('#cpfCnpj').attr('disabled', true);
 
     $('#fantasia').val(cliente.fantasia ?? '');
     $('#ieRg').val(cliente.ieRg ?? '');
@@ -66,7 +67,8 @@ function carregar() {
                         <td>${c.ativoDescricao || '-'}</td>
                         <td>${c.ieRg || '-'}</td>
                         <td class="text-center">
-                            <button class="btn btn-sm btn-warning me-1 btn-editar" type="button" data-regiaocodigo="${c.regiaoCodigo}" >
+                            <button class="btn btn-sm btn-warning me-1 btn-editar" type="button" data-regiaocodigo="${c.regiaoCodigo}" 
+                            data-categoriaCodigo="${c.categoriaCodigo}">
                                 <i class="bi bi-pencil-square me-1"></i>Editar
                             </button>
 
